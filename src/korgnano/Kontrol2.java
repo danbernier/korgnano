@@ -111,6 +111,7 @@ public class Kontrol2 implements Receiver {
     }
   }
   public void close() {
+    this.device.close();
   }
 
   // initialization methods
