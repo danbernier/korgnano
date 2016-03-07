@@ -38,30 +38,30 @@ public class Kontrol2 implements Receiver {
     if (midiMessage.getStatus() == ShortMessage.CONTROL_CHANGE) {  // nanoKONTROL only sends CONTROL messages.
       ShortMessage message = (ShortMessage)midiMessage;
 
-      int data1 = message.getData1();
-      int data2 = message.getData2();
+      int channelId = message.getData1();
+      int messageValue = message.getData2();
 
-      if (0 <= data1 && data1 <= 7) {
-        sliders[data1] = data2;
+      if (0 <= channelId && channelId <= 7) {
+        sliders[channelId] = messageValue;
       }
-      else if (16 <= data1 && data1 <= 24) {
-        dials[data1-16] = data2;
+      else if (16 <= channelId && channelId <= 24) {
+        dials[channelId-16] = messageValue;
       }
-      else if (32 <= data1 && data1 <= 39) {
+      else if (32 <= channelId && channelId <= 39) {
         // only on when you're holding it:
-        //soloButtons[data1-32] = data2 == 127;
+        //soloButtons[channelId-32] = messageValue == 127;
 
         // toggle when you press down:
-        if (data2 == 127) { soloButtons[data1-32] = !soloButtons[data1-32]; }
+        if (messageValue == 127) { soloButtons[channelId-32] = !soloButtons[channelId-32]; }
 
         // toggle when you release:
-        //if (data2 == 0) { soloButtons[data1-32] = !soloButtons[data1-32]; }
+        //if (messageValue == 0) { soloButtons[channelId-32] = !soloButtons[channelId-32]; }
       }
-      else if (48 <= data1 && data1 <= 55) {
-        if (data2 == 127) { muteButtons[data1-48] = !muteButtons[data1-48]; }
+      else if (48 <= channelId && channelId <= 55) {
+        if (messageValue == 127) { muteButtons[channelId-48] = !muteButtons[channelId-48]; }
       }
-      else if (64 <= data1 && data1 <= 71) {
-        if (data2 == 127) { recordButtons[data1-64] = !recordButtons[data1-64]; }
+      else if (64 <= channelId && channelId <= 71) {
+        if (messageValue == 127) { recordButtons[channelId-64] = !recordButtons[channelId-64]; }
       }
 
       lastMessage = message;
