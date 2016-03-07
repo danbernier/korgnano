@@ -99,11 +99,11 @@ public class Kontrol2 implements Receiver {
     for (MidiDevice.Info info : MidiSystem.getMidiDeviceInfo()) {
       //println(info.getName());
       //println(info.getDescription());
-      if (info.getName().indexOf("nanoKONTROL2") == 0) { // [hw:2,0,0]")) {
+      if (info.getName().indexOf("nanoKONTROL2") == 0) { // [hw:2,0,0]  <- the '2' is, like, the channel
         return info;
       }
-      }
-      System.err.println("Couldn't find the korg nanoKontrol2!");
-      return null;
     }
+    System.err.println("Couldn't find the korg nanoKontrol2!");
+    return null;
   }
+}
