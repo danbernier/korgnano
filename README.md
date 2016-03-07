@@ -20,7 +20,7 @@ You can read from the sliders, dials, and Solo, Mute, and Record buttons. The ot
 
 The sliders and dials will always yield values between 0 and 127 inclusive.
 
-The Solo, Mute, and Record buttons operate only in toggle mode - if you press them, this library will remember that it was turned on, and will report that it's on, until you press the button again. I'll add support for momentary mode soon.
+The Solo, Mute, and Record buttons operate in moment mode, by default - press a button, and the Kontrol2 will report that it's "on," until you release the button. You can switch it to Toggle mode - press a button, and release it, the Kontrol2 will report that it's "on"; press and release it again, and the Kontrol2 will report that it's "off."
 
 ```java
 import korgnano.*;
@@ -28,6 +28,11 @@ import korgnano.*;
 Kontrol2 k2;
 void setup() {
   k2 = new Kontrol2();
+
+  // The buttons all default to MOMENT mode - they're only "on" while you're
+  // pressing them down. Let's set some to TOGGLE mode.
+  k2.setRecordButtonMode(3, ButtonMode.TOGGLE);
+  k2.setSoloButtonMode(8, ButtonMode.TOGGLE);
 } 
 
 void draw() {
@@ -65,7 +70,7 @@ void draw() {
 
 ## `TODO`
 
-* Support momentary mode for the buttons.
+* ~~Support momentary mode for the buttons.~~
 * Get the LED lights working. I _think_ I need to send control messages back to the kontrol2, but I'm not sure. I'm still experimenting. I've [asked Korg for the details](https://twitter.com/danbernier/status/701535226707779585), maybe I'll get lucky.
 * Support the track, cycle, playback, etc buttons.
 * Maybe add configurable range mapping: instead of 0..127, maybe -1..1, or 0..100, or 0..1, or 0..360, or whatever.
