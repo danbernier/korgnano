@@ -6,6 +6,15 @@ public class Kontrol2 implements Receiver {
   private MidiDevice device;
   public Kontrol2() {
     this.device = getNanoKontrol2Device();
+
+    soloButtonModes = new ButtonMode[8];
+    muteButtonModes = new ButtonMode[8];
+    recordButtonModes = new ButtonMode[8];
+    for (int i = 0; i < 8; i++) {
+      soloButtonModes[i] = ButtonMode.MOMENT;
+      muteButtonModes[i] = ButtonMode.MOMENT;
+      recordButtonModes[i] = ButtonMode.MOMENT;
+    }
   }
 
   ShortMessage lastMessage;
@@ -16,6 +25,9 @@ public class Kontrol2 implements Receiver {
   private boolean[] soloButtons = new boolean[8];
   private boolean[] muteButtons = new boolean[8];
   private boolean[] recordButtons = new boolean[8];
+  private ButtonMode[] soloButtonModes;
+  private ButtonMode[] muteButtonModes;
+  private ButtonMode[] recordButtonModes;
 
   public int slider(int index) {
     return sliders[index-1];
@@ -33,6 +45,16 @@ public class Kontrol2 implements Receiver {
     return recordButtons[index-1];
   }
 
+  public void setSoloButtonMode(int index, ButtonMode buttonMode) {
+    soloButtonModes[index-1] = buttonMode;
+  }
+  public void setMuteButtonMode(int index, ButtonMode buttonMode) {
+    muteButtonModes[index-1] = buttonMode;
+  }
+  public void setRecordButtonMode(int index, ButtonMode buttonMode) {
+    recordButtonModes[index-1] = buttonMode;
+  }
+
   // Receiver methods:
   public void send(MidiMessage midiMessage, long timestamp) {  // send, aka receive
     if (midiMessage.getStatus() == ShortMessage.CONTROL_CHANGE) {  // nanoKONTROL only sends CONTROL messages.
@@ -48,20 +70,40 @@ public class Kontrol2 implements Receiver {
         dials[channelId-16] = messageValue;
       }
       else if (32 <= channelId && channelId <= 39) {
-        // only on when you're holding it:
-        //soloButtons[channelId-32] = messageValue == 127;
-
-        // toggle when you press down:
-        if (messageValue == 127) { soloButtons[channelId-32] = !soloButtons[channelId-32]; }
+        int index = channelId-32;
+        if (soloButtonModes[index] == ButtonMode.MOMENT) {
+          // only on when you're holding it:
+          soloButtons[index] = messageValue == 127;
+        }
+        else if (soloButtonModes[index] == ButtonMode.TOGGLE) {
+          // toggle when you press down:
+          if (messageValue == 127) { soloButtons[index] = !soloButtons[index]; }
+        }
 
         // toggle when you release:
         //if (messageValue == 0) { soloButtons[channelId-32] = !soloButtons[channelId-32]; }
       }
       else if (48 <= channelId && channelId <= 55) {
-        if (messageValue == 127) { muteButtons[channelId-48] = !muteButtons[channelId-48]; }
+        int index = channelId-48;
+        if (muteButtonModes[index] == ButtonMode.MOMENT) {
+          // only on when you're holding it:
+          muteButtons[index] = messageValue == 127;
+        }
+        else if (muteButtonModes[index] == ButtonMode.TOGGLE) {
+          // toggle when you press down:
+          if (messageValue == 127) { muteButtons[index] = !muteButtons[index]; }
+        }
       }
       else if (64 <= channelId && channelId <= 71) {
-        if (messageValue == 127) { recordButtons[channelId-64] = !recordButtons[channelId-64]; }
+        int index = channelId-64;
+        if (recordButtonModes[index] == ButtonMode.MOMENT) {
+          // only on when you're holding it:
+          recordButtons[index] = messageValue == 127;
+        }
+        else if (recordButtonModes[index] == ButtonMode.TOGGLE) {
+          // toggle when you press down:
+          if (messageValue == 127) { recordButtons[index] = !recordButtons[index]; }
+        }
       }
 
       lastMessage = message;
