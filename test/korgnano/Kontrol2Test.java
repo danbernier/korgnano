@@ -44,9 +44,9 @@ public class Kontrol2Test {
       assertFalse(nano.record(position));
       
       // Switch to Toggle mode.
-      nano.setSoloButtonMode(position, ButtonMode.TOGGLE);
-      nano.setMuteButtonMode(position, ButtonMode.TOGGLE);
-      nano.setRecordButtonMode(position, ButtonMode.TOGGLE);
+      nano.soloMode(position, ButtonMode.TOGGLE);
+      nano.muteMode(position, ButtonMode.TOGGLE);
+      nano.recordMode(position, ButtonMode.TOGGLE);
 
       assertFalse(nano.solo(position));
       send(nano, channel+32, 127);  // push solo

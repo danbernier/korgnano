@@ -45,13 +45,13 @@ public class Kontrol2 implements Receiver {
     return recordButtons[index-1];
   }
 
-  public void setSoloButtonMode(int index, ButtonMode buttonMode) {
+  public void soloMode(int index, ButtonMode buttonMode) {
     soloButtonModes[index-1] = buttonMode;
   }
-  public void setMuteButtonMode(int index, ButtonMode buttonMode) {
+  public void muteMode(int index, ButtonMode buttonMode) {
     muteButtonModes[index-1] = buttonMode;
   }
-  public void setRecordButtonMode(int index, ButtonMode buttonMode) {
+  public void recordMode(int index, ButtonMode buttonMode) {
     recordButtonModes[index-1] = buttonMode;
   }
 
