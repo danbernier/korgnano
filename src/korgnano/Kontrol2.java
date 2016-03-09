@@ -45,6 +45,31 @@ public class Kontrol2 implements Receiver {
     return recordButtons[index-1];
   }
 
+  public void buttonMode(ButtonMode buttonMode) {
+    soloMode(buttonMode);
+    muteMode(buttonMode);
+    recordMode(buttonMode);
+  }
+  public void buttonMode(int index, ButtonMode buttonMode) {
+    soloMode(index, buttonMode);
+    muteMode(index, buttonMode);
+    recordMode(index, buttonMode);
+  }
+  public void soloMode(ButtonMode buttonMode) {
+    for (int i = 1; i <= 8; i++) {
+      soloMode(i, buttonMode);
+    }
+  }
+  public void muteMode(ButtonMode buttonMode) {
+    for (int i = 1; i <= 8; i++) {
+      muteMode(i, buttonMode);
+    }
+  }
+  public void recordMode(ButtonMode buttonMode) {
+    for (int i = 1; i <= 8; i++) {
+      recordMode(i, buttonMode);
+    }
+  }
   public void soloMode(int index, ButtonMode buttonMode) {
     soloButtonModes[index-1] = buttonMode;
   }
@@ -53,6 +78,15 @@ public class Kontrol2 implements Receiver {
   }
   public void recordMode(int index, ButtonMode buttonMode) {
     recordButtonModes[index-1] = buttonMode;
+  }
+  public ButtonMode soloMode(int index) {
+    return soloButtonModes[index-1];
+  }
+  public ButtonMode muteMode(int index) {
+    return muteButtonModes[index-1];
+  }
+  public ButtonMode recordMode(int index) {
+    return recordButtonModes[index-1];
   }
 
   // Receiver methods:
