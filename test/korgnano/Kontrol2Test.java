@@ -7,11 +7,6 @@ import javax.sound.midi.*;
 
 public class Kontrol2Test {
   @Test
-  public void testFoo() {
-    assertEquals(3, 3);
-  }
-
-  @Test
   public void testSendingMessages() throws InvalidMidiDataException {
     Kontrol2 nano = new Kontrol2();
 
