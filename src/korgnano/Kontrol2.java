@@ -1,23 +1,51 @@
 package korgnano;
 
 import javax.sound.midi.*;
+import java.util.Queue;
+import java.util.LinkedList;
 
 public class Kontrol2 implements Receiver {
-  private MidiDevice device;
-  public Kontrol2() {
-    this.device = getNanoKontrol2Device();
+  private MidiDevice inDevice;
+  private MidiDevice outDevice;
+  private Scene scene;
+  private Queue<SceneChange> sceneChanges;
 
-    soloButtonModes = new ButtonMode[8];
-    muteButtonModes = new ButtonMode[8];
-    recordButtonModes = new ButtonMode[8];
-    for (int i = 0; i < 8; i++) {
-      soloButtonModes[i] = ButtonMode.MOMENT;
-      muteButtonModes[i] = ButtonMode.MOMENT;
-      recordButtonModes[i] = ButtonMode.MOMENT;
+  public Kontrol2() {
+    this.inDevice = getNanoKontrol2InputDevice();
+    this.outDevice = getNanoKontrol2OutputDevice();
+    this.scene = new Scene();
+    this.sceneChanges = new LinkedList<SceneChange>();
+    requestSceneData();
+  }
+
+  private void requestSceneData() {
+    sendMessageToDevice(new byte[] {
+      (byte)0xf0, // exclusive status
+        (byte)0x42, // ...for Korg
+        (byte)0x40, // 4g, where g = the Global midi channel. I'm assuming it's 0 here, but that could change.
+        (byte)0x00, // "Software Project (nanoKONTROL2: 000113H)". IDK
+        (byte)0x01, // no info
+        (byte)0x13, // no info
+        (byte)0x00, // "Sub ID",
+        (byte)0x1f, // 00 = Native mode I/O Request, 1f = Data dump request, 7f = data dump
+        (byte)0x10, // 10 = current scene data dump request (if prev byte == 1f)
+        (byte)0x00, // sort of an empty placeholder for the data
+        (byte)0xf7  // EOX ("End of Exclusive")
+    });
+  }
+
+  private void sendMessageToDevice(byte[] messageBytes) {
+    try {
+      SysexMessage message = new SysexMessage(messageBytes, messageBytes.length);
+      outDevice.getReceiver().send(message, System.currentTimeMillis());
+    } catch(InvalidMidiDataException x) {  // if you borked the message
+      System.out.println(x);
+    } catch(MidiUnavailableException x) { // sheesh
+      System.out.println(x);
     }
   }
 
-  ShortMessage lastMessage;
+  ShortMessage lastMessage;  // TODO can prolly kill that
   long lastMessageTimestamp;
 
   private int[] sliders = new int[8];
@@ -25,9 +53,6 @@ public class Kontrol2 implements Receiver {
   private boolean[] soloButtons = new boolean[8];
   private boolean[] muteButtons = new boolean[8];
   private boolean[] recordButtons = new boolean[8];
-  private ButtonMode[] soloButtonModes;
-  private ButtonMode[] muteButtonModes;
-  private ButtonMode[] recordButtonModes;
 
   public int slider(int index) {
     return sliders[index-1];
@@ -71,31 +96,74 @@ public class Kontrol2 implements Receiver {
     }
   }
   public void soloMode(int index, ButtonMode buttonMode) {
-    soloButtonModes[index-1] = buttonMode;
+    queueSceneChange(
+        scene.group(index).soloButton().setBehavior(
+          buttonMode == ButtonMode.MOMENT ? "Momentary" : "Toggle"));
   }
   public void muteMode(int index, ButtonMode buttonMode) {
-    muteButtonModes[index-1] = buttonMode;
+    queueSceneChange(
+        scene.group(index).muteButton().setBehavior(
+          buttonMode == ButtonMode.MOMENT ? "Momentary" : "Toggle"));
   }
   public void recordMode(int index, ButtonMode buttonMode) {
-    recordButtonModes[index-1] = buttonMode;
+    queueSceneChange(
+        scene.group(index).recordButton().setBehavior(
+          buttonMode == ButtonMode.MOMENT ? "Momentary" : "Toggle"));
   }
-  public ButtonMode soloMode(int index) {
-    return soloButtonModes[index-1];
+
+
+
+
+  // queuing scene writes
+  void queueSceneChange(SceneChange sc) {
+    System.out.println("Queueing SceneChange. (" + sceneChanges.size() + ")");
+    sceneChanges.add(sc);
+    if (scene.data != null && sceneChanges.size() == 1) {
+      scheduleScenePump();
+    }
   }
-  public ButtonMode muteMode(int index) {
-    return muteButtonModes[index-1];
+
+  void scheduleScenePump() {
+    System.out.println("Scheduling Scene Pump in 25ms");
+    new ScenePumper(25).run();
   }
-  public ButtonMode recordMode(int index) {
-    return recordButtonModes[index-1];
+
+  class ScenePumper extends Thread {
+    private final int msDelay;
+    ScenePumper(int msDelay) {
+      this.msDelay = msDelay;
+    }
+    public void run() {
+      try {
+        sleep(msDelay);
+      } catch (InterruptedException x) {}
+      pumpSceneChanges();
+    }
+
+    private void pumpSceneChanges() {
+      // Get the current size first, in case new messages come in in the meantime.
+      while(!sceneChanges.isEmpty()) {
+        SceneChange sc = sceneChanges.remove();
+        System.out.println("Applying SceneChange...");
+        scene.data[sc.byteArrayIndex] = sc.newValue;
+      }
+      System.out.println("Sending SceneChange request.");
+      sendMessageToDevice(scene.data);
+    }
   }
+
+
+
 
   // Receiver methods:
   public void send(MidiMessage midiMessage, long timestamp) {  // send, aka receive
-    if (midiMessage.getStatus() == ShortMessage.CONTROL_CHANGE) {  // nanoKONTROL only sends CONTROL messages.
+    if (midiMessage.getStatus() == ShortMessage.CONTROL_CHANGE) {  // nanoKONTROL only sends CONTROL messages. (Well. Sysex messages, too.)
       ShortMessage message = (ShortMessage)midiMessage;
 
       int channelId = message.getData1();
       int messageValue = message.getData2();
+
+      //System.out.println(channelId + ": " + messageValue);
 
       if (0 <= channelId && channelId <= 7) {
         sliders[channelId] = messageValue;
@@ -104,80 +172,67 @@ public class Kontrol2 implements Receiver {
         dials[channelId-16] = messageValue;
       }
       else if (32 <= channelId && channelId <= 39) {
-        int index = channelId-32;
-        if (soloButtonModes[index] == ButtonMode.MOMENT) {
-          // only on when you're holding it:
-          soloButtons[index] = messageValue == 127;
-        }
-        else if (soloButtonModes[index] == ButtonMode.TOGGLE) {
-          // toggle when you press down:
-          if (messageValue == 127) { soloButtons[index] = !soloButtons[index]; }
-        }
-
-        // toggle when you release:
-        //if (messageValue == 0) { soloButtons[channelId-32] = !soloButtons[channelId-32]; }
+        soloButtons[channelId-32] = messageValue == 127;
       }
       else if (48 <= channelId && channelId <= 55) {
-        int index = channelId-48;
-        if (muteButtonModes[index] == ButtonMode.MOMENT) {
-          // only on when you're holding it:
-          muteButtons[index] = messageValue == 127;
-        }
-        else if (muteButtonModes[index] == ButtonMode.TOGGLE) {
-          // toggle when you press down:
-          if (messageValue == 127) { muteButtons[index] = !muteButtons[index]; }
-        }
+        muteButtons[channelId-48] = messageValue == 127;
       }
       else if (64 <= channelId && channelId <= 71) {
-        int index = channelId-64;
-        if (recordButtonModes[index] == ButtonMode.MOMENT) {
-          // only on when you're holding it:
-          recordButtons[index] = messageValue == 127;
-        }
-        else if (recordButtonModes[index] == ButtonMode.TOGGLE) {
-          // toggle when you press down:
-          if (messageValue == 127) { recordButtons[index] = !recordButtons[index]; }
-        }
+        recordButtons[channelId-64] = messageValue == 127;
       }
 
       lastMessage = message;
       lastMessageTimestamp = timestamp;
     }
+    else {
+      byte[] data = midiMessage.getMessage();
+
+      if (midiMessage.getStatus() == SysexMessage.SYSTEM_EXCLUSIVE) {
+        if (data[7] == 0x7f && data[12] == 0x40) {
+          scene.setData(data);
+          scheduleScenePump();
+          //scene.display();
+        }
+      }
+    }
   }
+
   public void close() {
-    this.device.close();
+    this.inDevice.close();
+    this.outDevice.close();
   }
 
   // initialization methods
-  private MidiDevice getNanoKontrol2Device() {
-    MidiDevice.Info info = getNanoKontrol2DeviceInfo();
-    if (info != null) {
-      try {
-        MidiDevice device = MidiSystem.getMidiDevice(info);
-        if (!device.isOpen()) {
-          device.open();
-        }
-
-        device.getTransmitter().setReceiver(this);
-        //device.getTransmitter().setReceiver(device.getReceiver());
-
-        return device;
-      }
-      catch(MidiUnavailableException x) {
-        System.err.println("Tried to connect to the Midi device, but it looks like Midi is unavailable");
-        return null;
-      }
-    }
-    return null;
+  private MidiDevice getNanoKontrol2InputDevice() {
+    return getNanoKontrol2Device(true);
   }
-
-  private MidiDevice.Info getNanoKontrol2DeviceInfo() {
-    //println(MidiSystem.getMidiDeviceInfo());
+  private MidiDevice getNanoKontrol2OutputDevice() {
+    return getNanoKontrol2Device(false);
+  }
+  private MidiDevice getNanoKontrol2Device(boolean forInput) {
     for (MidiDevice.Info info : MidiSystem.getMidiDeviceInfo()) {
-      //println(info.getName());
-      //println(info.getDescription());
-      if (info.getName().indexOf("nanoKONTROL2") == 0) { // [hw:2,0,0]  <- the '2' is, like, the channel
-        return info;
+      if (info.getName().indexOf("nanoKONTROL2") == 0) { // [hw:2,0,0]  <- the '2' is, like, the USB port #
+        MidiDevice device = null;
+        try {
+          device = MidiSystem.getMidiDevice(info);
+          if (!device.isOpen()) {
+            device.open();
+          }
+
+          if (forInput && device.getMaxTransmitters() != 0) {  // -1 means unlimited. only == 0 is bad.
+            device.getTransmitter().setReceiver(this); // Wire us up to this device, so our #send() method is called.
+            return device; // Return it only so we can close() it when we're done.
+          }
+          else if (!forInput && device.getMaxReceivers() != 0) {  // -1 means unlimited. only == 0 is bad.
+            // Nothing to do; we'll send messages to it ourselves.
+            return device; // Return it so we can send messages to it, and close() it when we're done.
+          }
+        }
+        catch(MidiUnavailableException x) {
+          System.err.println("Tried to connect to this Midi device: " + device + " but it looks like Midi is unavailable");
+          x.printStackTrace();
+          return null;
+        }
       }
     }
     System.err.println("Couldn't find the korg nanoKontrol2!");
