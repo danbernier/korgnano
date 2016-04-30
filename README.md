@@ -1,5 +1,3 @@
-# korgnano
-
 This is a library to read values from the Korg [NanoKontrol2](http://www.korg.com/us/products/controllers/nanokontrol2/), via MIDI. I'd eventually like to add support for the [NanoKey2](http://www.korg.com/us/products/controllers/nanokey2/), and maybe the [NanoPad2](http://www.korg.com/us/products/controllers/nanopad2/).
 
 I made it for use with [Processing](http://processing.org), but it should be usable with any JVM program. It relies on no external libraries.
@@ -66,11 +64,7 @@ void draw() {
 
 ## `TODO`
 
-* ~~Support momentary mode for the buttons.~~
-* ~~Get the LED lights working. I _think_ I need to send control messages back to the kontrol2, but I'm not sure. I'm still experimenting. I've [asked Korg for the details](https://twitter.com/danbernier/status/701535226707779585), maybe I'll get lucky.~~
-* ~~Support the track, cycle, playback, etc buttons.~~
 * Maybe add configurable range mapping: instead of 0..127, maybe -1..1, or 0..100, or 0..1, or 0..360, or whatever.
 * Add event hooks: onSolo1(), onPlay()...
 * Support the NanoKey2, and maybe the NanoPad2.
-* Add examples, javadoc, a downloadable .zip, a gh-pages branch, etc.
 * [Register with Processing.org](https://github.com/processing/processing/wiki/Library-Basics).
