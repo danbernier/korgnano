@@ -77,4 +77,4 @@ void draw() {
 * Add event hooks: onSolo1(), onPlay()...
 * Support the NanoKey2, and maybe the NanoPad2.
 * Add examples, javadoc, a downloadable .zip, a gh-pages branch, etc.
-* Register with Processing.org.
+* [Register with Processing.org](https://github.com/processing/processing/wiki/Library-Basics).
