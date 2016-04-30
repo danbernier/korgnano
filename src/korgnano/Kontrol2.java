@@ -9,8 +9,13 @@ public class Kontrol2 implements Receiver {
   private MidiDevice outDevice;
   private Scene scene;
   private Queue<SceneChange> sceneChanges;
+  private boolean debug;
 
   public Kontrol2() {
+    this(false);
+  }
+  public Kontrol2(boolean debug) {
+    this.debug = debug;
     this.inDevice = getNanoKontrol2InputDevice();
     this.outDevice = getNanoKontrol2OutputDevice();
     this.scene = new Scene();
@@ -19,6 +24,7 @@ public class Kontrol2 implements Receiver {
   }
 
   private void requestSceneData() {
+    debug("Requesting scene data...");
     sendMessageToDevice(new byte[] {
       (byte)0xf0, // exclusive status
         (byte)0x42, // ...for Korg
@@ -110,7 +116,7 @@ public class Kontrol2 implements Receiver {
 
   // queuing scene writes
   void queueSceneChange(SceneChange sc) {
-    System.out.println("Queueing SceneChange. (" + sceneChanges.size() + ")");
+    debug("Queueing SceneChange. (" + sceneChanges.size() + " change queued.) " + (scene.data == null ? "(No scene data)" : ""));
     sceneChanges.add(sc);
     if (scene.data != null && sceneChanges.size() == 1) {
       scheduleScenePump();
@@ -118,7 +124,7 @@ public class Kontrol2 implements Receiver {
   }
 
   void scheduleScenePump() {
-    System.out.println("Scheduling Scene Pump in 25ms");
+    debug("Scheduling Scene Pump in 25ms");
     new ScenePumper(25).run();
   }
 
@@ -138,10 +144,10 @@ public class Kontrol2 implements Receiver {
       // Get the current size first, in case new messages come in in the meantime.
       while(!sceneChanges.isEmpty()) {
         SceneChange sc = sceneChanges.remove();
-        System.out.println("Applying SceneChange...");
+        debug("Applying SceneChange...");
         scene.data[sc.byteArrayIndex] = sc.newValue;
       }
-      System.out.println("Sending SceneChange request.");
+      debug("Sending SceneChange request.");
       sendMessageToDevice(scene.data);
     }
   }
@@ -157,7 +163,7 @@ public class Kontrol2 implements Receiver {
       int channelId = message.getData1();
       int messageValue = message.getData2();
 
-      //System.out.println(channelId + ": " + messageValue);
+      //debug(channelId + ": " + messageValue);
 
       if (0 <= channelId && channelId <= 7) {
         sliders[channelId] = messageValue;
@@ -182,6 +188,7 @@ public class Kontrol2 implements Receiver {
       byte[] data = midiMessage.getMessage();
 
       if (midiMessage.getStatus() == SysexMessage.SYSTEM_EXCLUSIVE) {
+        debug("Got a scene dump!");
         if (data[7] == 0x7f && data[12] == 0x40) {
           scene.setData(data);
           scheduleScenePump();
@@ -236,5 +243,11 @@ public class Kontrol2 implements Receiver {
     }
     System.err.println("Couldn't find the korg nanoKontrol2!");
     return null;
+  }
+
+  private void debug(String message) {
+    if (this.debug) {
+      System.out.println(message);
+    }
   }
 }
