@@ -29,10 +29,10 @@ Kontrol2 k2;
 void setup() {
   k2 = new Kontrol2();
 
-  // The buttons all default to MOMENT mode - they're only "on" while you're
-  // pressing them down. Let's set some to TOGGLE mode.
-  k2.setRecordButtonMode(3, ButtonMode.TOGGLE);
-  k2.setSoloButtonMode(8, ButtonMode.TOGGLE);
+  // The buttons all default to Momentary mode - they're only "on" while you're
+  // pressing them down. Let's set some to Toggle mode.
+  k2.recordMode(3, ButtonMode.Toggle);
+  k2.soloMode(8, ButtonMode.Toggle);
 } 
 
 void draw() {
@@ -71,9 +71,10 @@ void draw() {
 ## `TODO`
 
 * ~~Support momentary mode for the buttons.~~
-* Get the LED lights working. I _think_ I need to send control messages back to the kontrol2, but I'm not sure. I'm still experimenting. I've [asked Korg for the details](https://twitter.com/danbernier/status/701535226707779585), maybe I'll get lucky.
-* Support the track, cycle, playback, etc buttons.
+* ~~Get the LED lights working. I _think_ I need to send control messages back to the kontrol2, but I'm not sure. I'm still experimenting. I've [asked Korg for the details](https://twitter.com/danbernier/status/701535226707779585), maybe I'll get lucky.~~
+* ~~Support the track, cycle, playback, etc buttons.~~
 * Maybe add configurable range mapping: instead of 0..127, maybe -1..1, or 0..100, or 0..1, or 0..360, or whatever.
+* Add event hooks: onSolo1(), onPlay()...
 * Support the NanoKey2, and maybe the NanoPad2.
 * Add examples, javadoc, a downloadable .zip, a gh-pages branch, etc.
 * Register with Processing.org.
