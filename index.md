@@ -68,4 +68,4 @@ The Solo, Mute, and Record buttons operate in moment mode, by default - press a 
 * Maybe add configurable range mapping: instead of 0..127, maybe -1..1, or 0..100, or 0..1, or 0..360, or whatever.
 * Add event hooks: onSolo1(), onPlay()...
 * Support the NanoKey2, and maybe the NanoPad2.
-* [Register with Processing.org](https://github.com/processing/processing/wiki/Library-Basics).
+* ~~[Register with Processing.org](https://github.com/processing/processing/wiki/Library-Basics).~~
