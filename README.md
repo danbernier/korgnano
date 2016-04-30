@@ -6,17 +6,17 @@ I made it for use with [Processing](http://processing.org), but it should be usa
 
 It's meant to be easy, and not a full-featured MIDI client.
 
-## Project Status: Just Started
+## Project Status: v1, but only Kontrol2.
 
-It's really, really simple right now. Closer to a working proof-of-concept than a real library.
+The Kontrol2 is ready for use, but that's all there is. I own a nanoKeys, so that'll be the next one I work on. (But no ETA yet.)
 
 ## Usage
 
-You can read from the sliders, dials, and Solo, Mute, and Record buttons. The other buttons haven't been added yet.
+You can read from the sliders, dials, and Solo, Mute, and Record buttons, and all the "Transport" buttons: next track, previous track, stop, record, etc.
 
 The sliders and dials will always yield values between 0 and 127 inclusive.
 
-The Solo, Mute, and Record buttons operate in moment mode, by default - press a button, and the Kontrol2 will report that it's "on," until you release the button. You can switch it to Toggle mode - press a button, and release it, the Kontrol2 will report that it's "on"; press and release it again, and the Kontrol2 will report that it's "off."
+The Solo, Mute, and Record buttons operate in moment mode, by default - press a button, and the Kontrol2 will report that it's "on," until you release the button. You can switch it to Toggle mode - press a button, and release it, the Kontrol2 will report that it's "on"; press and release it again, and the Kontrol2 will report that it's "off." The buttons will light up whenever they're "on."
 
 ```java
 import korgnano.*;
