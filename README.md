@@ -12,10 +12,6 @@ It's really, really simple right now. Closer to a working proof-of-concept than 
 
 ## Usage
 
-First, take a look at the Kontrol2:
-
-![Korg NanoKontrol2](imgs/kontrol2-chart.png)
-
 You can read from the sliders, dials, and Solo, Mute, and Record buttons. The other buttons haven't been added yet.
 
 The sliders and dials will always yield values between 0 and 127 inclusive.
