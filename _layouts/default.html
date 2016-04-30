@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+  {% include head.html %}
+
+  <body>
+
+    <div class="container">
+
+      <div class='btn-toolbar pull-right' role='toolbar'>
+        <div class='btn-group btn-group-lg'>
+          <a href='korgnano.zip' class='btn btn-default'><i class="fa fa-cloud-download" aria-hidden="true"></i> download</a>
+          <a href="http://github.com/danbernier/korgnano" class='btn btn-default'><i class="fa fa-github" aria-hidden="true"></i> github</a>
+          <a href='javadoc' class='btn btn-default'><i class="fa fa-book" aria-hidden="true"></i> javadoc</a>
+        </div>
+      </div>
+
+      <h1>KorgNano</h1>
+
+      {{ content }}
+
+      <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+    </div>
+  </body>
+
+</html>

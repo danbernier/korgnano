@@ -1,0 +1,12 @@
+# Site settings
+title: KorgNano for Processing
+email: danbernier@gmail.com
+description: > # this means to ignore newlines until "baseurl:"
+  A super-easy way to control a Processing sketch with a
+  [Korg nanoKontrol2](http://www.korg.com/us/products/controllers/nanokontrol2/).
+  No knowledge of MIDI needed!
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://danbernier.github.io/korgnano" # the base hostname & protocol for your site
+
+# Build settings
+markdown: kramdown
