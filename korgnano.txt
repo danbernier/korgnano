@@ -1,0 +1,9 @@
+name = KorgNano
+authors = [Dan Bernier](http://designischoice.com)
+url = http://danbernier.github.io/korgnano/
+categories = Hardware
+sentence = A super-easy way to control a Processing sketch with a [Korg nanoKontrol2](http://www.korg.com/us/products/controllers/nanokontrol2/).
+paragraph = No knowledge of MIDI needed!
+
+prettyVersion = 1.0.0
+version = 1

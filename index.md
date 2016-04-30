@@ -72,4 +72,3 @@ void draw() {
 * Add event hooks: onSolo1(), onPlay()...
 * Support the NanoKey2, and maybe the NanoPad2.
 * [Register with Processing.org](https://github.com/processing/processing/wiki/Library-Basics).
-
