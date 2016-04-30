@@ -96,19 +96,13 @@ public class Kontrol2 implements Receiver {
     }
   }
   public void soloMode(int index, ButtonMode buttonMode) {
-    queueSceneChange(
-        scene.group(index).soloButton().setBehavior(
-          buttonMode == ButtonMode.Momentary ? "Momentary" : "Toggle"));
+    queueSceneChange(scene.group(index).soloButton().setBehavior(buttonMode));
   }
   public void muteMode(int index, ButtonMode buttonMode) {
-    queueSceneChange(
-        scene.group(index).muteButton().setBehavior(
-          buttonMode == ButtonMode.Momentary ? "Momentary" : "Toggle"));
+    queueSceneChange(scene.group(index).muteButton().setBehavior(buttonMode));
   }
   public void recordMode(int index, ButtonMode buttonMode) {
-    queueSceneChange(
-        scene.group(index).recordButton().setBehavior(
-          buttonMode == ButtonMode.Momentary ? "Momentary" : "Toggle"));
+    queueSceneChange(scene.group(index).recordButton().setBehavior(buttonMode));
   }
 
 

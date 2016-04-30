@@ -157,8 +157,8 @@ class Scene {
       int offValue() { return groupP(paramOffsetInGroup + 3); }
       int onValue() { return groupP(paramOffsetInGroup + 4); }
       
-      SceneChange setBehavior(String newVal) {
-        boolean momentary = newVal.equals("Momentary");
+      SceneChange setBehavior(ButtonMode newMode) {
+        boolean momentary = newMode == ButtonMode.Momentary;
         byte newByteVal = (byte)(momentary ? 0x00 : 0x01);
         return writeToScene(groupPNum(paramOffsetInGroup + 1), newByteVal);
       }
