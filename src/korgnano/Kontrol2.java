@@ -191,6 +191,11 @@ public class Kontrol2 implements Receiver {
     }
   }
 
+  protected void finalize() throws Throwable {
+    close();
+    super.finalize();
+  }
+
   public void close() {
     this.inDevice.close();
     this.outDevice.close();
