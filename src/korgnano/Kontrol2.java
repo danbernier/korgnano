@@ -217,7 +217,8 @@ public class Kontrol2 implements Receiver {
   }
   private MidiDevice getNanoKontrol2Device(boolean forInput) {
     for (MidiDevice.Info info : MidiSystem.getMidiDeviceInfo()) {
-      if (info.getName().indexOf("nanoKONTROL2") == 0) { // [hw:2,0,0]  <- the '2' is, like, the USB port #
+      if (info.getName().indexOf("nanoKONTROL2") >= 0 ||
+          info.getDescription().indexOf("nanoKONTROL2") >= 0) {
         MidiDevice device = null;
         try {
           device = MidiSystem.getMidiDevice(info);
