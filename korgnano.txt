@@ -6,4 +6,4 @@ sentence = A super-easy way to control a Processing sketch with a [Korg nanoKont
 paragraph = No knowledge of MIDI needed!
 
 prettyVersion = 1.0.0
-version = 1
+version = 2
