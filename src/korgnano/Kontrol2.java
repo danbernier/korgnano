@@ -51,9 +51,6 @@ public class Kontrol2 implements Receiver {
     }
   }
 
-  ShortMessage lastMessage;  // TODO can prolly kill that
-  long lastMessageTimestamp;
-
   private int[] sliders = new int[8];
   private int[] dials = new int[8];
   private boolean[] soloButtons = new boolean[8];
@@ -180,9 +177,6 @@ public class Kontrol2 implements Receiver {
       else if (64 <= channelId && channelId <= 71) {
         recordButtons[channelId-64] = messageValue == 127;
       }
-
-      lastMessage = message;
-      lastMessageTimestamp = timestamp;
     }
     else {
       byte[] data = midiMessage.getMessage();
