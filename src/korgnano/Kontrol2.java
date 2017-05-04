@@ -214,6 +214,7 @@ public class Kontrol2 implements Receiver {
       if (info.getName().indexOf("nanoKONTROL2") >= 0 ||
           info.getDescription().indexOf("nanoKONTROL2") >= 0) {
         MidiDevice device = null;
+        debug("Trying to open MIDI device (for " + (forInput ? "input" : "output") + "): " + info.getName() + ", " + info.getDescription());
         try {
           device = MidiSystem.getMidiDevice(info);
           if (!device.isOpen()) {
