@@ -214,18 +214,21 @@ public class Kontrol2 implements Receiver {
       if (info.getName().indexOf("nanoKONTROL2") >= 0 ||
           info.getDescription().indexOf("nanoKONTROL2") >= 0) {
         MidiDevice device = null;
-        debug("Trying to open MIDI device (for " + (forInput ? "input" : "output") + "): " + info.getName() + ", " + info.getDescription());
+        debug("Trying to open MIDI device (for " + (forInput ? "input" : "output") + "): " + info.getName() + " :: " + info.getDescription());
         try {
           device = MidiSystem.getMidiDevice(info);
           if (!device.isOpen()) {
+            debug("  opening the device...");
             device.open();
           }
 
           if (forInput && device.getMaxTransmitters() != 0) {  // -1 means unlimited. only == 0 is bad.
+            debug("  setting THIS as the receiver...");
             device.getTransmitter().setReceiver(this); // Wire us up to this device, so our #send() method is called.
             return device; // Return it only so we can close() it when we're done.
           }
           else if (!forInput && device.getMaxReceivers() != 0) {  // -1 means unlimited. only == 0 is bad.
+            debug("  using this device for output!");
             // Nothing to do; we'll send messages to it ourselves.
             return device; // Return it so we can send messages to it, and close() it when we're done.
           }
