@@ -41,6 +41,7 @@ public class Kontrol2 implements Receiver {
   }
 
   private void sendMessageToDevice(byte[] messageBytes) {
+    debug("Sending message: ...");
     try {
       SysexMessage message = new SysexMessage(messageBytes, messageBytes.length);
       outDevice.getReceiver().send(message, System.currentTimeMillis());
@@ -154,6 +155,7 @@ public class Kontrol2 implements Receiver {
 
   // Receiver methods:
   public void send(MidiMessage midiMessage, long timestamp) {  // send, aka receive
+    debug("WE GOT ONE! " + midiMessage.getStatus() + " " + ShortMessage.CONTROL_CHANGE);
     if (midiMessage.getStatus() == ShortMessage.CONTROL_CHANGE) {  // nanoKONTROL only sends CONTROL messages. (Well. Sysex messages, too.)
       ShortMessage message = (ShortMessage)midiMessage;
 
@@ -180,6 +182,7 @@ public class Kontrol2 implements Receiver {
     }
     else {
       byte[] data = midiMessage.getMessage();
+      debug("Got a message..." + data.length + " bytes long");
 
       if (midiMessage.getStatus() == SysexMessage.SYSTEM_EXCLUSIVE) {
         debug("Got a scene dump!");
