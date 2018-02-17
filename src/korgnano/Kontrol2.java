@@ -11,8 +11,6 @@ public class Kontrol2 implements Receiver {
   private Queue<SceneChange> sceneChanges;
   private boolean debug;
 
-  private boolean useMmj = true;
-
   public Kontrol2() {
     this(false);
   }
@@ -23,11 +21,6 @@ public class Kontrol2 implements Receiver {
     this.scene = new Scene();
     this.sceneChanges = new LinkedList<SceneChange>();
     requestSceneData();
-  }
-
-  public Kontrol2 useMmj(boolean use) {
-    this.useMmj = use;
-    return this;
   }
 
   private void requestSceneData() {
@@ -51,11 +44,14 @@ public class Kontrol2 implements Receiver {
     debug("Sending message: ...");
     try {
       SysexMessage message = new SysexMessage(messageBytes, messageBytes.length);
-      if (useMmj) {
-        outDevice.getReceiver().send(message, 0);
-      } else {
-        outDevice.getReceiver().send(message, System.currentTimeMillis());
-      }
+
+      // Always send 0 for the current timestamp. According to themidibus' README,
+      // passing the timestamps breaks MMJ, and passing 0 doesn't seem to affect
+      // it on Linux, so, just do that. If we find a reason to send actual
+      // timestamps, we'll reconsider.
+      outDevice.getReceiver().send(message, 0);
+      // outDevice.getReceiver().send(message, System.currentTimeMillis());
+
     } catch(InvalidMidiDataException x) {  // if you borked the message
       System.out.println(x);
     } catch(MidiUnavailableException x) { // sheesh
