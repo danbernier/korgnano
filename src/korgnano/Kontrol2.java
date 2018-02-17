@@ -11,6 +11,8 @@ public class Kontrol2 implements Receiver {
   private Queue<SceneChange> sceneChanges;
   private boolean debug;
 
+  private boolean useMmj = true;
+
   public Kontrol2() {
     this(false);
   }
@@ -21,6 +23,11 @@ public class Kontrol2 implements Receiver {
     this.scene = new Scene();
     this.sceneChanges = new LinkedList<SceneChange>();
     requestSceneData();
+  }
+
+  public Kontrol2 useMmj(boolean use) {
+    this.useMmj = use;
+    return this;
   }
 
   private void requestSceneData() {
@@ -44,7 +51,11 @@ public class Kontrol2 implements Receiver {
     debug("Sending message: ...");
     try {
       SysexMessage message = new SysexMessage(messageBytes, messageBytes.length);
-      outDevice.getReceiver().send(message, System.currentTimeMillis());
+      if (useMmj) {
+        outDevice.getReceiver().send(message, 0);
+      } else {
+        outDevice.getReceiver().send(message, System.currentTimeMillis());
+      }
     } catch(InvalidMidiDataException x) {  // if you borked the message
       System.out.println(x);
     } catch(MidiUnavailableException x) { // sheesh
