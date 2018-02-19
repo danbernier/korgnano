@@ -169,7 +169,7 @@ public class Kontrol2 implements Receiver {
       int channelId = message.getData1();
       int messageValue = message.getData2();
 
-      //debug(channelId + ": " + messageValue);
+      debug(channelId + ": " + messageValue);
 
       if (0 <= channelId && channelId <= 7) {
         sliders[channelId] = messageValue;
