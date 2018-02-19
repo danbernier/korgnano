@@ -207,7 +207,7 @@ public class Kontrol2 implements Receiver {
         if (data[7] == 0x7f && data[12] == 0x40) {
           scene.setData(data);
           scheduleScenePump();
-          //scene.display();
+          // if (debug) { scene.display(); }
         }
       }
     }
