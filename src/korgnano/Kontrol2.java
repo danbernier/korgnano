@@ -16,6 +16,17 @@ public class Kontrol2 implements Receiver {
   }
   public Kontrol2(boolean debug) {
     this.debug = debug;
+
+    debug("----------------------------------");
+    debug(" Hi!");
+    debug(" Since you're debugging, you might want to know how to factory-reset your Korg nanoKontrol2:");
+    debug(" 1. Unplug it from USB");
+    debug(" 2. Hold down these buttons: Previous Track, Next Track, Cycle");
+    debug(" 3. Plug in the USB");
+    debug(" Once the 'Rewind', 'Fast Forward', 'Stop', 'Play', and 'Record' buttons stop blinking, let go.");
+    debug(" You're all set.");
+    debug("----------------------------------");
+
     this.inDevice = getNanoKontrol2InputDevice();
     this.outDevice = getNanoKontrol2OutputDevice();
     this.scene = new Scene();
