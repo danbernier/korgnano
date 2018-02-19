@@ -206,6 +206,13 @@ class Scene {
       System.out.println(label + " trigger values:  " + offValue() + ".." + onValue());
     }
     
+    SceneChange setBehavior(ButtonMode newMode) {
+      boolean momentary = newMode == ButtonMode.Momentary;
+      byte newByteVal = (byte)(momentary ? 0x00 : 0x01);
+      // System.out.println("Setting " + label + " mode to " + newMode + ", param offset: " + (paramOffset + 1));
+      return writeToScene(paramOffset + 1, newByteVal);
+    }
+
     String assignType() { return pick(p(paramOffset + 0), "No Assign", "CC", "Note"); }
     String buttonBehavior() { return pick(p(paramOffset + 1), "Momentary", "Toggle"); }
     int noteNumber() { return p(paramOffset + 2); }

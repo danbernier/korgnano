@@ -118,6 +118,7 @@ public class Kontrol2 implements Receiver {
     soloMode(buttonMode);
     muteMode(buttonMode);
     recordMode(buttonMode);
+    transportButtonsMode(buttonMode);
   }
   public void buttonMode(int index, ButtonMode buttonMode) {
     soloMode(index, buttonMode);
@@ -148,6 +149,20 @@ public class Kontrol2 implements Receiver {
   public void recordMode(int index, ButtonMode buttonMode) {
     queueSceneChange(scene.group(index).recordButton().setBehavior(buttonMode));
   }
+  public void transportButtonsMode(ButtonMode md) {
+    cycleButtonMode(md);
+    rewindButtonMode(md);
+    fastForwardButtonMode(md);
+    stopButtonMode(md);
+    playButtonMode(md);
+    recordButtonMode(md);
+  }
+  public void cycleButtonMode(ButtonMode md) { queueSceneChange(scene.cycle().setBehavior(md)); }
+  public void rewindButtonMode(ButtonMode md) { queueSceneChange(scene.rewind().setBehavior(md)); }
+  public void fastForwardButtonMode(ButtonMode md) { queueSceneChange(scene.fastForward().setBehavior(md)); }
+  public void stopButtonMode(ButtonMode md) { queueSceneChange(scene.stop().setBehavior(md)); }
+  public void playButtonMode(ButtonMode md) { queueSceneChange(scene.play().setBehavior(md)); }
+  public void recordButtonMode(ButtonMode md) { queueSceneChange(scene.record().setBehavior(md)); }
 
 
 
