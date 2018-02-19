@@ -75,6 +75,17 @@ public class Kontrol2 implements Receiver {
   private boolean[] soloButtons = new boolean[8];
   private boolean[] muteButtons = new boolean[8];
   private boolean[] recordButtons = new boolean[8];
+  private boolean prevTrack;
+  private boolean nextTrack;
+  private boolean setMarker;
+  private boolean prevMarker;
+  private boolean nextMarker;
+  private boolean cycle;
+  private boolean rewind;
+  private boolean fastForward;
+  private boolean stop;
+  private boolean play;
+  private boolean record;
 
   public int slider(int index) {
     return sliders[index-1];
@@ -91,6 +102,17 @@ public class Kontrol2 implements Receiver {
   public boolean record(int index) {
     return recordButtons[index-1];
   }
+  public boolean prevTrack() { return this.prevTrack; }
+  public boolean nextTrack() { return this.nextTrack; }
+  public boolean setMarker() { return this.setMarker; }
+  public boolean prevMarker() { return this.prevMarker; }
+  public boolean nextMarker() { return this.nextMarker; }
+  public boolean cycle() { return this.cycle; }
+  public boolean rewind() { return this.rewind; }
+  public boolean fastForward() { return this.fastForward; }
+  public boolean stop() { return this.stop; }
+  public boolean play() { return this.play; }
+  public boolean record() { return this.record; }
 
   public void buttonMode(ButtonMode buttonMode) {
     soloMode(buttonMode);
@@ -197,6 +219,17 @@ public class Kontrol2 implements Receiver {
       else if (64 <= channelId && channelId <= 71) {
         recordButtons[channelId-64] = messageValue == 127;
       }
+      else if (channelId == 58) { prevTrack = messageValue == 127; }
+      else if (channelId == 59) { nextTrack = messageValue == 127; }
+      else if (channelId == 60) { setMarker = messageValue == 127; }
+      else if (channelId == 61) { prevMarker = messageValue == 127; }
+      else if (channelId == 62) { nextMarker = messageValue == 127; }
+      else if (channelId == 46) { cycle = messageValue == 127; }
+      else if (channelId == 43) { rewind = messageValue == 127; }
+      else if (channelId == 44) { fastForward = messageValue == 127; }
+      else if (channelId == 42) { stop = messageValue == 127; }
+      else if (channelId == 41) { play = messageValue == 127; }
+      else if (channelId == 45) { record = messageValue == 127; }
     }
     else {
       byte[] data = midiMessage.getMessage();
