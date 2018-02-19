@@ -2,6 +2,8 @@ This is a library to read values from the Korg [NanoKontrol2](http://www.korg.co
 
 I made it for use with [Processing](http://processing.org), but it should be usable with any JVM program. It relies on no external libraries.
 
+***UNLESS*** you're running on OSX, in which case, you probably want to use [mmj](http://www.humatic.de/htools/mmj.htm) instead of Apple's default MIDI subsystem. For processing sketches, it's as simple as copying `mmj.jar` and `libmmj.jnilib` into `libraries/korgnano/library` in your Processing sketch folder. (Special thanks to [themidibus](https://github.com/sparks/themidibus) project by @sparks for this fix - and in fact for teaching me just enough about MIDI to make this.)
+
 It's meant to be easy, and not a full-featured MIDI client.
 
 ## Project Status: v1, but only Kontrol2.
