@@ -5,13 +5,13 @@ class Scene {
   Group[] groups;
   TransportButton prevTrack;
   TransportButton nextTrack;
-  TransportButton cycle;
-  TransportButton markerSet;
+  TransportButton setMarker;
   TransportButton prevMarker;
   TransportButton nextMarker;
+  TransportButton cycle;
   TransportButton rewind;
   TransportButton fastForward;
-  TransportButton stopButton;
+  TransportButton stop;
   TransportButton play;
   TransportButton record;
   
@@ -23,13 +23,13 @@ class Scene {
     
     prevTrack = new TransportButton(0, "PrevTrack");
     nextTrack = new TransportButton(1, "NextTrack");
-    cycle = new TransportButton(2, "Cycle");
-    markerSet = new TransportButton(3, "Marker Set");
+    setMarker = new TransportButton(3, "Marker Set");
     prevMarker = new TransportButton(4, "PrevMarker");
     nextMarker = new TransportButton(5, "NextMarker");
+    cycle = new TransportButton(2, "Cycle");
     rewind = new TransportButton(6, "Rewind");
     fastForward = new TransportButton(7, "FastForward");
-    stopButton = new TransportButton(8, "Stop");
+    stop = new TransportButton(8, "Stop");
     play = new TransportButton(9, "Play");
     record = new TransportButton(10, "Record");
   }
@@ -53,13 +53,13 @@ class Scene {
     System.out.println("Transport button MIDI channel: " + transportButtonMidiChannel());
     prevTrack().display();
     nextTrack().display();
-    cycle().display();
-    markerSet().display();
+    setMarker().display();
     prevMarker().display();
     nextMarker().display();
+    cycle().display();
     rewind().display();
     fastForward().display();
-    stopButton().display();
+    stop().display();
     play().display();
     record().display();
   }
@@ -181,13 +181,13 @@ class Scene {
   int transportButtonMidiChannel() { return p(251); }
   TransportButton prevTrack() { return prevTrack; }
   TransportButton nextTrack() { return nextTrack; }
-  TransportButton cycle() { return cycle; }
-  TransportButton markerSet() { return markerSet; }
+  TransportButton setMarker() { return setMarker; }
   TransportButton prevMarker() { return prevMarker; }
   TransportButton nextMarker() { return nextMarker; }
+  TransportButton cycle() { return cycle; }
   TransportButton rewind() { return rewind; }
   TransportButton fastForward() { return fastForward; }
-  TransportButton stopButton() { return stopButton; }
+  TransportButton stop() { return stop; }
   TransportButton play() { return play; }
   TransportButton record() { return record; }
   
