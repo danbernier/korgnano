@@ -12,7 +12,6 @@ void setup() {
   // controls for this; see the docs).
   k.buttonMode(ButtonMode.Toggle);
   
-  textFont(createFont("sans", 25));
   textAlign(CENTER, CENTER);
 }
 
@@ -20,21 +19,38 @@ void draw() {
   background(20);
   noStroke();
   
+  textFont(createFont("sans", 25));
   pushMatrix();
-  translate(width * 0.25, 0);
+  translate(width * 0.3, 0);
   for (int i = 0; i < 8; i++) {
     int control = i + 1;
     
     drawDial(k.dial(control));
     drawSlider(k.slider(control));
     
-    if (k.solo(control))   { drawButton("S", 175); }
-    if (k.mute(control))   { drawButton("M", 225); }
-    if (k.record(control)) { drawButton("R", 275); }
+    drawButton(k.solo(control), "[S]", -30, 175);
+    drawButton(k.mute(control), "[M]", -30, 225);
+    drawButton(k.record(control), "[R]", -30, 275);
     
-    translate(125.0, 0);
+    translate(117.0, 0);
   }
   popMatrix();
+  
+  drawButton(k.prevTrack(),   "(‹)",     50, height-150);
+  drawButton(k.nextTrack(),   "(›)",    100, height-150);
+  drawButton(k.setMarker(),   "(set)",  150, height-90);
+  drawButton(k.prevMarker(),  "(‹)",    200, height-90);
+  drawButton(k.nextMarker(),  "(›)",    250, height-90);
+  drawButton(k.cycle(),       "(cycle)", 50, height-90);
+  drawButton(k.rewind(),      "[«]",     50, height-30);
+  drawButton(k.fastForward(), "[»]",    100, height-30);
+  drawButton(k.stop(),        "[■]",    150, height-30);
+  drawButton(k.play(),        "[›]",    200, height-30);
+  drawButton(k.record(),      "[•]",    250, height-30);
+  
+  fill(90);
+  text("Track", 75, height-175);
+  text("--Marker--", 200, height-120);
 }
 
 void drawDial(float dialValue) {
@@ -59,14 +75,9 @@ void drawSlider(float sliderValue) {
   popStyle();
 }
 
-void drawButton(String letter, float y) {
+void drawButton(boolean isOn, String label, float x, float y) {
   pushStyle();
-  rectMode(CENTER);
-  fill(255, 0, 0);
-  text(letter, -30, y);
-  noFill();
-  stroke(255, 0, 0);
-  strokeWeight(2);
-  rect(-30, y+3, 30, 30);
+  fill(isOn ? color(255, 0, 0) : color(90));
+  text(label, x, y);
   popStyle();
 }
