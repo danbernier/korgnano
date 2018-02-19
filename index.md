@@ -1,4 +1,4 @@
--e ---
+---
 layout: default
 ---
 
@@ -18,7 +18,7 @@ You can read from the sliders, dials, and Solo, Mute, and Record buttons, and al
 
 The sliders and dials will always yield values between 0 and 127 inclusive.
 
-The Solo, Mute, and Record buttons operate in moment mode, by default - press a button, and the Kontrol2 will report that it's "on," until you release the button. You can switch it to Toggle mode - press a button, and release it, the Kontrol2 will report that it's "on"; press and release it again, and the Kontrol2 will report that it's "off." The buttons will light up whenever they're "on."
+The buttons operate in Momentary mode, by default - press a button, and the Kontrol2 will report that it's "on," until you release the button. You can switch it to Toggle mode - press a button, and release it, the Kontrol2 will report that it's "on"; press and release it again, and the Kontrol2 will report that it's "off." The buttons will light up whenever they're "on." NB: this works for the buttons in each Control Group, and for the Transport buttons: Cycle, Rewind, Fast Forward, Stop, Play, and Record; it *doesn't* work for Previous-Track, Next-Track, Set-Marker, Previous-Marker, or Next-Marker. Korg seems to not support Toggle mode for those buttons as well (see the commit message for b5ee2a59e9).
 
     import korgnano.*;
     
